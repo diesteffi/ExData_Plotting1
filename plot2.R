@@ -1,0 +1,34 @@
+## Set the working directory for this session to the folder that contains the
+## assignment data
+setwd("~/Documents/Documents/Programming/Exploratory/Week 1/ExData_Plotting1")
+
+## Load the data into R
+power<-read.table("household_power_consumption.txt", header=T, sep=";", na.strings="?")
+
+## Format column names
+namesnew<-tolower(names(power))
+namesnew<-gsub(names, "_", "")
+namesnew<-gsub( "_", "", namesnew)
+names(power)<-namesnew
+rm(namesnew)
+
+## Subset for the dates "2007-02-01" and "2007-02-02"
+power$date<-as.character(power$date)
+power$time<-as.character(power$time)
+power<-power[power$date=="1/2/2007"|power$date=="2/2/2007",]
+
+## Format date and time
+power$date<-strptime(paste(power$date, power$time, sep=" " ), 
+                           format="%d/%m/%Y %H:%M:%S")
+power<-power[,c(1,3:length(names(power)))]
+
+## Create line plot
+png(filename='plot2.png') #default is 480x480 pixel
+
+plot(power$date,power$globalactivepower,
+     type='l',
+     xlab='',
+     ylab= 'Global Active Power (kilowatt)')
+
+dev.off()
+
